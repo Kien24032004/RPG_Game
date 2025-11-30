@@ -7,6 +7,8 @@ public class Enemy : Entity
     public EnemyMoveState moveState;
     public EnemyAttackState attackState;
     public EnemyBattleState battleState;
+    public EnemyDeadState deadState;
+    public EnemyStunnedState stunnedState;
 
     [Header("Battle Details")]
     public float battleMoveSpeed = 3f;
@@ -14,6 +16,11 @@ public class Enemy : Entity
     public float battleTimeDuration = 5f; // Duration to stay in battle state after detecting player
     public float minRetreatDistance = 1f;
     public Vector2 retreatVelocity;
+
+    [Header("Stunned Details")]
+    public  float stunnedDuration = 1f;
+    public Vector2 stunnedVelocity = new Vector2(7f, 7f);
+    [SerializeField] protected bool canBeStunned;
 
     [Header("Movement Details")]
     public float idleTime = 2f;
@@ -26,6 +33,20 @@ public class Enemy : Entity
     [SerializeField] private Transform playerCheck;
     [SerializeField] private float playerCheckDistance = 10f;
     public Transform player { get; private set; }
+
+    public void EnableCounterWindow(bool enable) => canBeStunned = enable; 
+
+    public override void EnityDeath()
+    {
+        base.EnityDeath();
+
+        stateMachine.ChangeState(deadState);
+    }
+
+    private void HandlePlayerDeath()
+    {
+        stateMachine.ChangeState(idleState);
+    }
 
     public void TryEnterBattleState(Transform player)
     {
@@ -70,5 +91,15 @@ public class Enemy : Entity
         Gizmos.DrawLine(playerCheck.position, new Vector3(playerCheck.position.x + (facingDirection * attackDistance), playerCheck.position.y));
         Gizmos.color = Color.green;
         Gizmos.DrawLine(playerCheck.position, new Vector3(playerCheck.position.x + (facingDirection * minRetreatDistance), playerCheck.position.y));
+    }
+
+    private void OnEnable()
+    {
+        Player.OnPlayerDeath += HandlePlayerDeath; // Subscribe to player death event
+    }
+
+    private void OnDisable()
+    {
+        Player.OnPlayerDeath -= HandlePlayerDeath; // Unsubscribe from player death event
     }
 }

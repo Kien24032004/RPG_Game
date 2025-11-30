@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EntityCombat : MonoBehaviour
 {
+    private EntityVFX vfx;
     public float damage = 10f;
 
     [Header("Target Detection")]
@@ -10,19 +11,31 @@ public class EntityCombat : MonoBehaviour
     [SerializeField] private float targetCheckRadius = 1f;
     [SerializeField] private LayerMask whatIsTarget;
 
+    private void Awake()
+    {
+        vfx = GetComponent<EntityVFX>();
+    }
+
     public void PerformAttack()
     {
         GetDetectedColliders();
 
         foreach(var target in GetDetectedColliders())
         {
-            EntityHealth targetHealth = target.GetComponent<EntityHealth>();
+            IDamgable damgable = target.GetComponent<IDamgable>();
 
-            targetHealth?.TakeDamage(damage, transform);
+            if(damgable == null)
+                continue; // Skip to next target if this target is not damgable 
+
+            damgable.TakeDamage(damage, transform);
+            vfx.CreateOnHitVfx(target.transform);
+
+            // EntityHealth targetHealth = target.GetComponent<EntityHealth>();
+            // targetHealth?.TakeDamage(damage, transform);
         }
     }
 
-    private Collider2D[] GetDetectedColliders()
+    protected Collider2D[] GetDetectedColliders()
     {
         return Physics2D.OverlapCircleAll(targetCheck.position, targetCheckRadius, whatIsTarget);
     }

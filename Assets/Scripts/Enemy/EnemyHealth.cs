@@ -9,6 +9,9 @@ public class EnemyHealth : EntityHealth
     {
         base.TakeDamage(damage, damageDealer);
 
+        if(!isDead)
+            return;
+
         if(damageDealer.GetComponent<Player>() != null)
         {
             enemy.TryEnterBattleState(damageDealer);

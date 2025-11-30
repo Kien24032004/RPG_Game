@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Player : Entity
 {
+    public static event Action OnPlayerDeath;
     public PlayerInputSet input { get; private set; }
 
 
@@ -15,6 +17,8 @@ public class Player : Entity
     public PlayerDashState dashState { get; private set; }
     public PlayerBasicAttackState basicAttackState { get; private set; }
     public PlayerJumpAttackState jumpAttackState { get; private set; }
+    public PlayerDeadState deadState { get; private set; }
+    public PlayerCounterAttackState counterAttackState { get; private set; }
 
 
     [Header("Attack Details")]
@@ -55,6 +59,8 @@ public class Player : Entity
         dashState = new PlayerDashState(this, stateMachine, "dash");
         basicAttackState = new PlayerBasicAttackState(this, stateMachine, "basicAttack");
         jumpAttackState = new PlayerJumpAttackState(this, stateMachine, "jumpAttack");
+        deadState = new PlayerDeadState(this, stateMachine, "dead");
+        counterAttackState = new PlayerCounterAttackState(this, stateMachine, "counterAttack");
     }
 
     protected override void Start()
@@ -62,6 +68,14 @@ public class Player : Entity
         base.Start();
         
         stateMachine.Initialize(idleState);
+    }
+
+    public override void EnityDeath()
+    {
+        base.EnityDeath();
+
+        OnPlayerDeath?.Invoke(); // Notify subscribers about player death
+        stateMachine.ChangeState(deadState);
     }
 
     private void OnEnable()
