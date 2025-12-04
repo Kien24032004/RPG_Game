@@ -10,9 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dbc7d5df424962449afb9a2fc2bcf0b, type: 3}
-  m_Name: Skill Data - Cleanse
+  m_Name: Skill Data - Time lost shard
   m_EditorClassIdentifier: 
-  cost: 0
-  displayName: 
-  description: 
-  icon: {fileID: 0}
+  cost: 2
+  skillType: 0
+  upgradeData:
+    upgradeType: 3
+    cooldown: 3
+  displayName: Time lost shard
+  description: 'Create a time shard before you dash
+
+    (Inherits all upgrades of
+    Time shard Ability)'
+  icon: {fileID: 189470790, guid: 634a796ff58f82945b3552dcf2855619, type: 3}

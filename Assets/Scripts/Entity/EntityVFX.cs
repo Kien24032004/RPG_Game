@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EntityVFX : MonoBehaviour
 {
-    private SpriteRenderer sr;
+    protected SpriteRenderer sr;
     private Entity entity;
 
     [Header("On Damage VFX")]
@@ -20,7 +20,7 @@ public class EntityVFX : MonoBehaviour
     [Header("Element Color")]
     [SerializeField] private Color chillVfx = Color.cyan;
     [SerializeField] private Color burnVfx = Color.red;
-    [SerializeField] private Color electrifyVfx = Color.yellow;
+    [SerializeField] private Color shockVfx = Color.yellow;
     private Color originalHitVfxColor;
 
     private void Awake() 
@@ -40,7 +40,7 @@ public class EntityVFX : MonoBehaviour
             StartCoroutine(PlayStatusVfxCoroutine(duration, burnVfx));
 
         if(element == ElementType.Lightning)
-            StartCoroutine(PlayStatusVfxCoroutine(duration, electrifyVfx));
+            StartCoroutine(PlayStatusVfxCoroutine(duration, shockVfx));
     }
 
     public void StopAllVfx()
@@ -73,23 +73,30 @@ public class EntityVFX : MonoBehaviour
         sr.color = Color.white;
     }
 
-    public void CreateOnHitVfx(Transform target, bool isCrit)
+    public void CreateOnHitVfx(Transform target, bool isCrit, ElementType element)
     {
         GameObject hitPrefab = isCrit ? critHitVfx : hitVfx;
         GameObject vfx = Instantiate(hitPrefab, target.position, Quaternion.identity);
-        vfx.GetComponentInChildren<SpriteRenderer>().color = hitVfxColor;
+        //vfx.GetComponentInChildren<SpriteRenderer>().color = GetElementColor(element);
 
         if(entity.facingDirection == -1 && isCrit)
             vfx.transform.Rotate(0, 180, 0);
     }
 
-    public void UpdateOnHitColor(ElementType element)
+    public Color GetElementColor(ElementType element)
     {
-        if(element == ElementType.Ice)
-            hitVfxColor = chillVfx;
-        
-        if(element == ElementType.None)
-            hitVfxColor = originalHitVfxColor;
+        switch(element)
+        {
+            case ElementType.Ice: 
+                return chillVfx;
+            case ElementType.Fire: 
+                return burnVfx;
+            case ElementType.Lightning: 
+                return shockVfx;
+
+            default:
+                return Color.white;
+        }
     }
 
     public void PlayOnDamageVfx()

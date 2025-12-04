@@ -33,6 +33,12 @@ public class UITreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         UpdateIconColor(GetColorByHex(lockedColorHex));
     }
 
+    private void Start()
+    {
+        if(skillData.unlockedByDefault)
+            Unlock();
+    }
+
     public void Refund()
     {
         isUnlocked = false;
@@ -48,8 +54,11 @@ public class UITreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         isUnlocked = true;
         UpdateIconColor(Color.white);
         LockConflictNodes();
+
         skillTree.RemoveSkillPoints(skillData.cost);
         connectHandler.UnlockConnectionImage(true);
+
+        skillTree.skillManager.GetSkillByType(skillData.skillType).SetSkillUpgrade(skillData.upgradeData);
     }
 
     private bool CanBeUnlocked()
@@ -78,7 +87,18 @@ public class UITreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private void LockConflictNodes()
     {
         foreach(var node in conflictNodes)
+        {
             node.isLocked = true;
+            node.LockChildNodes();
+        }
+    }
+
+    public void LockChildNodes()
+    {
+        isLocked = true;
+
+        foreach(var node in connectHandler.GetChildNodes())
+            node.LockChildNodes();
     }
 
     private void UpdateIconColor(Color color)
@@ -102,16 +122,20 @@ public class UITreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         ui.skillToolTip.ShowToolTip(true, rect, this);
 
-        if(isUnlocked == false || isLocked == false)
-            ToggleNodeHighlight(true);
+        if(isUnlocked || isLocked)
+            return;
+            
+        ToggleNodeHighlight(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         ui.skillToolTip.ShowToolTip(false, rect);
 
-        if(isUnlocked == false || isLocked == false)
-            ToggleNodeHighlight(false);
+        if(isUnlocked || isLocked)
+            return;
+            
+        ToggleNodeHighlight(false);
     }
 
     private void ToggleNodeHighlight(bool highlight)

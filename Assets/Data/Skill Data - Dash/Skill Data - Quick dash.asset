@@ -10,9 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dbc7d5df424962449afb9a2fc2bcf0b, type: 3}
-  m_Name: Skill Data - Timeless attack
+  m_Name: Skill Data - Quick dash
   m_EditorClassIdentifier: 
   cost: 0
-  displayName: 
-  description: 
-  icon: {fileID: 0}
+  unlockedByDefault: 1
+  skillType: 0
+  upgradeData:
+    upgradeType: 0
+    cooldown: 3
+  displayName: Quick dash
+  description: 'Dash to avoid attack
+
+    You cannot take damage while dashing
+
+'
+  icon: {fileID: -774773240, guid: 634a796ff58f82945b3552dcf2855619, type: 3}

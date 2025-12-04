@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,17 +27,17 @@ public class UITreeConnectHandler : MonoBehaviour
             originalColor = connectionImage.color;
     }
 
-    private void OnValidate()
+    public UITreeNode[] GetChildNodes()
     {
-        if(connectionDetails.Length <= 0)
-            return;
+        List<UITreeNode> childrenToReturn = new List<UITreeNode>();
 
-        if(connectionDetails.Length != connections.Length)
+        foreach(var node in connectionDetails)
         {
-            return;
+            if(node.childNode != null)
+                childrenToReturn.Add(node.childNode.GetComponent<UITreeNode>());
         }
 
-        UpdateConnections();
+        return childrenToReturn.ToArray();
     }
 
     private void UpdateConnections()
@@ -84,4 +85,17 @@ public class UITreeConnectHandler : MonoBehaviour
     public void SetConnectionImage(Image image) => connectionImage = image;
 
     public void SetPosition(Vector2 position) => rect.anchoredPosition = position;
+    
+    private void OnValidate()
+    {
+        if(connectionDetails.Length <= 0)
+            return;
+
+        if(connectionDetails.Length != connections.Length)
+        {
+            return;
+        }
+
+        UpdateConnections();
+    }
 }
