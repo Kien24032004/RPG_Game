@@ -19,6 +19,7 @@ public class SkillBase : MonoBehaviour
         skillManager = GetComponentInParent<PlayerSkillManager>();
         player = GetComponentInParent<Player>();
         lastTimeUsed = lastTimeUsed - cooldown;
+        damageScaleData = new DamageScaleData();
     }
 
     public virtual void TryUseSkill()
@@ -33,7 +34,7 @@ public class SkillBase : MonoBehaviour
         damageScaleData = upgrade.damageScaleData;
     }
 
-    public bool CanUseSkill()
+    public virtual bool CanUseSkill()
     {
         if(upgradeType == SkillUpgradeType.None)
             return false;

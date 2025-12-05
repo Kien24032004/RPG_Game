@@ -16,5 +16,20 @@ public enum SkillUpgradeType
     ShardMoveToEnemy, // shard will move towards nearest enemy
     ShardMulticast, // shard anility can have up to N charges. You can cast them all in a raw
     ShardTeleport, // you can swap place with the last shard tou created
-    ShardTeleportHpRewind // when you swap place with shard, yoour HP % is same as it was when you created shard
+    ShardTeleportHpRewind, // when you swap place with shard, yoour HP % is same as it was when you created shard
+
+     // ---- Shard Tree ----
+    SwordThrow, 
+    SwordThrowSpin, 
+    SwordThrowPierce,
+    SwordThrowBounce,
+
+    // ---- Time Echo ----
+    TimeEcho,
+    TimeEchoSingleAttack,
+    TimeEchoMultiAttack,
+    TimeEchoChanceToMultiply,
+    TimeEchoHealWisp,
+    TimeEchoCleanseWisp,
+    TimeEchoCooldownWisp
 }

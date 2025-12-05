@@ -9,6 +9,8 @@ public class Player : Entity
     public PlayerInputSet input { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
     public PlayerVFX vfx { get; private set; }
+    public EntityHealth health { get; private set; }
+    public EntityStatusHandler statusHandler{ get; private set; }
 
     #region State Variables
 
@@ -23,6 +25,7 @@ public class Player : Entity
     public PlayerJumpAttackState jumpAttackState { get; private set; }
     public PlayerDeadState deadState { get; private set; }
     public PlayerCounterAttackState counterAttackState { get; private set; }
+    public PlayerSwordThrowState swordThrowState { get; private set; }
 
     #endregion
 
@@ -48,15 +51,19 @@ public class Player : Entity
     public float dashSpeed = 20f;
     
     public Vector2 moveInput { get; private set; }
+    public Vector2 mousePosition { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
 
         ui = FindAnyObjectByType<UI>();
-        input = new PlayerInputSet();
-        skillManager = GetComponent<PlayerSkillManager>();
         vfx = GetComponent<PlayerVFX>();
+        health = GetComponent<EntityHealth>();
+        skillManager = GetComponent<PlayerSkillManager>();
+        statusHandler = GetComponent<EntityStatusHandler>();
+
+        input = new PlayerInputSet();
 
         idleState = new PlayerIdleState(this, stateMachine, "idle");
         moveState = new PlayerMoveState(this, stateMachine, "move");
@@ -69,6 +76,7 @@ public class Player : Entity
         jumpAttackState = new PlayerJumpAttackState(this, stateMachine, "jumpAttack");
         deadState = new PlayerDeadState(this, stateMachine, "dead");
         counterAttackState = new PlayerCounterAttackState(this, stateMachine, "counterAttack");
+        swordThrowState = new PlayerSwordThrowState(this, stateMachine, "swordThrow");
     }
 
     protected override void Start()
@@ -129,11 +137,15 @@ public class Player : Entity
     {
         input.Enable();
 
+        input.Player.Mouse.performed += ctx => mousePosition = ctx.ReadValue<Vector2>();
+
         input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
 
         input.Player.ToggleSkillTreeUI.performed += ctx => ui.ToggleSkillTreeUI();
+
         input.Player.Spell.performed += ctx => skillManager.shard.TryUseSkill();
+        input.Player.Spell.performed += ctx => skillManager.timeEcho.TryUseSkill();
     }
 
     private void OnDisable()

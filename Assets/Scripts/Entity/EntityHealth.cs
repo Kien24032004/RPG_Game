@@ -32,6 +32,14 @@ public class EntityHealth : MonoBehaviour , IDamgable
         entityStats = GetComponent<EntityStats>();
         healthBar = GetComponentInChildren<Slider>();
 
+        SetupHealth();
+    }
+
+    private void SetupHealth()
+    {
+        if(entityStats == null)
+            return;
+
         currentHealth = entityStats.GetMaxHealth();
         UpdateHealthBar();
 
@@ -52,22 +60,24 @@ public class EntityHealth : MonoBehaviour , IDamgable
         EntityStats attackerStats = damageDealer.GetComponent<EntityStats>();
         float armorReduction = attackerStats != null ? attackerStats.GetArmorReduction() : 0;
 
-        float mitigation = entityStats.GetArmorMitigation(armorReduction);
-        float physicalDamageTaken = damage * (1 - mitigation);
+        float mitigation = entityStats != null ? entityStats.GetArmorMitigation(armorReduction) : 0;
+        float resistance = entityStats != null ? entityStats.GetElementalResistance(element) : 0;
 
-        float resistance = entityStats.GetElementalResistance(element);
+        float physicalDamageTaken = damage * (1 - mitigation);
         float elementalDamageTaken = elementalDamage * (1 - resistance);
 
         TakeKnockback(damageDealer, physicalDamageTaken);
         ReduceHealth(physicalDamageTaken + elementalDamageTaken);
-        //Debug.Log("Elemental Damage taken:" + elementalDamageTaken + " - element" + element);
 
         return true;
     }
 
     private bool AttackEvaded()
     {
-        return Random.Range(0, 100) < entityStats.GetEvasion();    
+        if(entityStats == null)
+            return false;
+        else
+            return Random.Range(0, 100) < entityStats.GetEvasion();    
     }
 
     private void RegenerateHealth()
@@ -148,6 +158,9 @@ public class EntityHealth : MonoBehaviour , IDamgable
 
     private bool IsHeavyDamage(float damage)
     {
-        return (damage / entityStats.GetMaxHealth()) > heavyDamageThreshold;
+        if(entityStats == null)
+            return false;
+        else
+            return (damage / entityStats.GetMaxHealth()) > heavyDamageThreshold;
     }
 }
