@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b3601a9b10d5dd49ba5b79a3fad07d6, type: 3}
+  m_Name: Equipment data - Power Armor
+  m_EditorClassIdentifier: 
+  saveId: 7c2ac77e1ecdd5848872112a83abfe45
+  itemPrice: 100
+  minStackSizeAtShop: 1
+  maxStackSizeAtShop: 1
+  itemRarity: 849
+  dropChance: 15.2
+  maxDropChance: 65
+  craftRecipe:
+  - itemData: {fileID: 11400000, guid: 408b21d5305d2a64f9ba38ddaa1899bf, type: 2}
+    stackSize: 2
+    itemEffect: {fileID: 0}
+  - itemData: {fileID: 11400000, guid: 922816aa225f29d4d80891fe55a23e60, type: 2}
+    stackSize: 2
+    itemEffect: {fileID: 0}
+  - itemData: {fileID: 11400000, guid: 408b21d5305d2a64f9ba38ddaa1899bf, type: 2}
+    stackSize: 2
+    itemEffect: {fileID: 0}
+  itemName: Power Armor
+  itemIcon: {fileID: -1327029806, guid: 7ae0115109b4a6f42a4f7ad59397d09b, type: 3}
+  itemType: 2
+  maxStackSize: 1
+  itemEffect: {fileID: 11400000, guid: 421e58f733a71194c9499bc734648b63, type: 2}
+  modifiers:
+  - statType: 0
+    value: 100
+  - statType: 2
+    value: 15
+  - statType: 1
+    value: 2.5
+  - statType: 14
+    value: 25
